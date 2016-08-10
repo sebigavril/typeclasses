@@ -5,12 +5,19 @@ object Math {
   case class Vector(x: Double, y: Double, z: Double)
   case class Matrix(data: Seq[Seq[Double]])
 
+
   trait Addable[T] {
     def zero: T
     def +(a: T, b: T): T
   }
 
-  object VectorOps extends Addable[Vector] {
+  object AddableOps {
+    def zero[T](implicit ops: Addable[T]): T           = ops.zero
+    def +[T](a: T, b: T)(implicit ops: Addable[T]): T  = ops.+(a, b)
+  }
+
+
+  implicit object VectorOps extends Addable[Vector] {
     def zero = Vector(0.0, 0.0, 0.0)
 
     def +(a: Vector, b: Vector) = Vector(a.x + b.x, a.y + b.y, a.z + b.z)
@@ -19,7 +26,7 @@ object Math {
     val Zero = Vector(0.0, 0.0, 0.0)
   }
 
-  class MatrixOps(length: Int) extends Addable[Matrix] {
+  implicit class MatrixOps(length: Int) extends Addable[Matrix] {
     def zero = Matrix.zero(length)
 
     def +(a: Matrix, b: Matrix) = {
