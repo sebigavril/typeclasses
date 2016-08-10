@@ -2,31 +2,34 @@ package math
 
 object Math {
 
+  case class Vector(x: Double, y: Double, z: Double)
+  case class Matrix(data: Seq[Seq[Double]])
+
   trait Addable[T] {
     def zero: T
-    def +(toSum: T): T
+    def +(a: T, b: T): T
   }
 
-  case class Vector(x: Double, y: Double, z: Double) extends Addable[Vector] {
+  object VectorOps extends Addable[Vector] {
     def zero = Vector(0.0, 0.0, 0.0)
 
-    def +(v: Vector) = Vector(x + v.x, y + v.y, z + v.z)
+    def +(a: Vector, b: Vector) = Vector(a.x + b.x, a.y + b.y, a.z + b.z)
   }
   object Vector {
     val Zero = Vector(0.0, 0.0, 0.0)
   }
 
-  case class Matrix(data: Seq[Seq[Double]]) extends Addable[Matrix] {
-    def zero = Matrix.zero(data.size)
+  class MatrixOps(length: Int) extends Addable[Matrix] {
+    def zero = Matrix.zero(length)
 
-    def +(m: Matrix) = {
-      require(data.size == m.data.size)
-      (data zip m.data).map { case (a, b) =>
-        require (a.size == b.size)
+    def +(a: Matrix, b: Matrix) = {
+      require(a.data.size == b.data.size)
+      (a.data zip b.data).map { case (aa, bb) =>
+        require (aa.size == bb.size)
       }
 
-      val resData = (data zip m.data).map { case (a, b) =>
-        (a.zip(b).map(x => x._1 + x._2))
+      val resData = (a.data zip b.data).map { case (aa, bb) =>
+        (aa.zip(bb).map(x => x._1 + x._2))
       }
 
       Matrix(resData)
