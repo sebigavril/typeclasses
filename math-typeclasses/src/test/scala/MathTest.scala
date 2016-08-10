@@ -16,11 +16,6 @@ class MathSpec extends WordSpecLike with Matchers {
         Vector.Zero     shouldEqual
         Vector(1, 1, 1)
       }
-      "throw if attempting to add a matrix" in {
-        an [IllegalArgumentException] should be thrownBy
-        Vector(1, 1, 1) +
-        Matrix(Seq(Seq(1, 1), Seq(1, 1)))
-      }
     }
 
     "working with matrices" should {
@@ -39,12 +34,6 @@ class MathSpec extends WordSpecLike with Matchers {
         an [IllegalArgumentException] should be thrownBy
         Matrix(Seq(Seq(1, 1), Seq(1, 1))) +
         Matrix(Seq(Seq(1, 1, 1), Seq(1, 1, 1), Seq(1, 1, 1)))
-      }
-
-      "throw if attempting to add a vector" in {
-        an [IllegalArgumentException] should be thrownBy
-        Matrix(Seq(Seq(1, 1), Seq(1, 1))) +
-        Vector(1, 1, 1)
       }
     }
   }

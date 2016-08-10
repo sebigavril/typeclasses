@@ -2,36 +2,24 @@ package math
 
 object Math {
 
-  trait Addable {
-    def zero: Addable
-    def +(toSum: Addable): Addable
+  trait Addable[T] {
+    def zero: T
+    def +(toSum: T): T
   }
 
-  case class Vector(x: Double, y: Double, z: Double) extends Addable {
+  case class Vector(x: Double, y: Double, z: Double) extends Addable[Vector] {
     def zero = Vector(0.0, 0.0, 0.0)
 
-    def +(toSum: Addable) = {
-      toSum match {
-        case v: Vector => Vector(x + v.x, y + v.y, z + v.z)
-        case _         => throw new IllegalArgumentException(s"I need a $Vector")
-      }
-    }
+    def +(v: Vector) = Vector(x + v.x, y + v.y, z + v.z)
   }
   object Vector {
     val Zero = Vector(0.0, 0.0, 0.0)
   }
 
-  case class Matrix(data: Seq[Seq[Double]]) extends Addable {
+  case class Matrix(data: Seq[Seq[Double]]) extends Addable[Matrix] {
     def zero = Matrix.zero(data.size)
 
-    def +(toSum: Addable) = {
-      toSum match {
-        case m: Matrix => addMatrix(m)
-        case _         => throw new IllegalArgumentException(s"I need a $Matrix")
-      }
-    }
-
-    private def addMatrix(m: Matrix) = {
+    def +(m: Matrix) = {
       require(data.size == m.data.size)
       (data zip m.data).map { case (a, b) =>
         require (a.size == b.size)
