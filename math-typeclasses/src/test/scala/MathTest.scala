@@ -1,23 +1,34 @@
 import org.scalatest._
-import math.Math.{Vector, Matrix}
+import math.Math.{Addable, Vector, Matrix}
 import math.Math.{AddableOps}
 
 class MathSpec extends WordSpecLike with Matchers {
 
   "Math implemented via typeclasses" when {
 
-    import math.Math.VectorOps
-
     "working with vectors" should {
       "add them" in {
+        import math.Math.VectorOps
         Vector(1, 1, 1) +
         Vector(2, 2, 2) shouldEqual
         Vector(3, 3, 3)
       }
       "add zero" in {
+        import math.Math.VectorOps
         Vector(1, 1, 1) +
         VectorOps.zero  shouldEqual
         Vector(1, 1, 1)
+      }
+
+      "consider them 2d vetors" in {
+        implicit object twoDVectorOps extends Addable[Vector] {
+          def zero = math.Math.VectorOps.zero
+          def +(a: Vector, b: Vector) = Vector(a.x + b.x, a.y + b.y, 0)
+        }
+
+        Vector(1, 1, 1) +
+        Vector(2, 2, 2) shouldEqual
+        Vector(3, 3, 0)
       }
     }
 
