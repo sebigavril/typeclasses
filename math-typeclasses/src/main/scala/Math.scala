@@ -11,11 +11,10 @@ object Math {
     def +(a: T, b: T): T
   }
 
-  object AddableOps {
-    def zero[T](implicit ops: Addable[T]): T           = ops.zero
-    def +[T](a: T, b: T)(implicit ops: Addable[T]): T  = ops.+(a, b)
+  implicit class AddableOps[T](data: T)(implicit ops: Addable[T]) {
+    def zero: T     = ops.zero
+    def +(a: T): T  = ops.+(data, a)
   }
-
 
   implicit object VectorOps extends Addable[Vector] {
     def zero = Vector(0.0, 0.0, 0.0)
